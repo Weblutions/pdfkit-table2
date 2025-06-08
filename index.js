@@ -364,7 +364,16 @@ class PDFDocumentWithTables extends PDFDocument {
               cell.hasOwnProperty('options') && prepareRowOptions(cell);
             }
     
-            text = String(text).replace('bold:','').replace('size','');
+            // bold
+            if( String(text).indexOf('bold:') === 0 ){
+              text = text.replace('bold:','');
+            }
+
+            // size
+            if( String(text).indexOf('size') === 0 ){
+              let size = String(text).substring(4,2).replace(':','').replace('+','') >> 0;
+              text = text.replace(`size${size}:`,'');
+            }
             
             // cell padding
             cellp = prepareCellPadding(table.headers[i].padding || options.padding || 0);
@@ -657,7 +666,7 @@ class PDFDocumentWithTables extends PDFDocument {
           // For safety, consider 3 rows margin instead of just one
           // if (startY + 2 * rowHeight < maxY) startY = rowBottomY + columnSpacing + rowDistance; // 0.5 is spacing rows
           // else this.emitter.emit('addPage'); //this.addPage();
-          if(options.useSafelyMarginBottom && this.y + safelyMarginBottom + rowHeight >= maxY && !lockAddPage) onFirePageAdded(); // this.emitter.emit('addPage'); //this.addPage();    
+          if(options.useSafelyMarginBottom && rowBottomY + rowHeight + columnSpacing + safelyMarginBottom >= maxY && !lockAddPage) onFirePageAdded(); // this.emitter.emit('addPage'); //this.addPage();
 
           // calc position
           startY = rowBottomY + columnSpacing + rowDistance; // 0.5 is spacing rows
@@ -753,7 +762,14 @@ class PDFDocumentWithTables extends PDFDocument {
                 align: align,
               }); 
               // line height, spacing hehight, cell and text diference
-              topTextToAlignVertically = rowDistance - columnSpacing + (rectCell.height - heightText) / 2;  
+              if(valign === 'bottom'){
+                // line height, spacing hehight, cell and text diference
+                topTextToAlignVertically = rowDistance - (columnSpacing * 2) + (rectCell.height - heightText);
+              }
+              else {
+                // line height, spacing hehight, cell and text diference
+                topTextToAlignVertically = rowDistance - columnSpacing + (rectCell.height - heightText) / 2;
+              }
             }
             // ------------------------------------------------------------------------------
     
@@ -807,8 +823,9 @@ class PDFDocumentWithTables extends PDFDocument {
           // For safety, consider 3 rows margin instead of just one
           // if (startY + 3 * rowHeight < maxY) startY = rowBottomY + columnSpacing + rowDistance; // 0.5 is spacing rows
           // else this.emitter.emit('addPage'); //this.addPage(); 
-          if(options.useSafelyMarginBottom && this.y + safelyMarginBottom + rowHeight >= maxY && !lockAddPage) onFirePageAdded(); // this.emitter.emit('addPage'); //this.addPage(); 
+          if (options.useSafelyMarginBottom && rowBottomY + rowHeight + columnSpacing + safelyMarginBottom >= maxY && !lockAddPage) onFirePageAdded(); // this.emitter.emit('addPage'); //this.addPage(); 
           
+
           // calc position
           startY = rowBottomY + columnSpacing + rowDistance; // 0.5 is spacing rows
 
@@ -867,7 +884,14 @@ class PDFDocumentWithTables extends PDFDocument {
                 align: align,
               }); 
               // line height, spacing hehight, cell and text diference
-              topTextToAlignVertically = rowDistance - columnSpacing + (rectCell.height - heightText) / 2;  
+              if(valign === 'bottom'){
+                // line height, spacing hehight, cell and text diference
+                topTextToAlignVertically = rowDistance - (columnSpacing * 2) + (rectCell.height - heightText);
+              }
+              else {
+                // line height, spacing hehight, cell and text diference
+                topTextToAlignVertically = rowDistance - columnSpacing + (rectCell.height - heightText) / 2;
+              }
             }
             // ------------------------------------------------------------------------------
     
