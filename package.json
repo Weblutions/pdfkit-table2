@@ -1,6 +1,6 @@
 {
   "name": "pdfkit-table2",
-  "version": "0.1.99",
+  "version": "1.0.0",
   "description": "PdfKit Table 2. Helps to draw informations in simple tables using pdfkit.",
   "main": "index.js",
   "types": "index.d.ts",
